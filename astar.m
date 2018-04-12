@@ -87,7 +87,9 @@ N = 1; % Number of visited Nodes
 CurrentNode = NodesSet(:,:,ParentNodeNumber);
 cost_linear = 1;
 cost_diagonal =sqrt(2);
-NodesInfoSet(:,:,1)=[1,1,costtocome,id];
+hcost=norm(target_node - CurrentNode);
+tcost = costtocome+ hcost;
+NodesInfoSet(:,:,1)=[1,1,costtocome,tcost,id];
 %% USE BFS for Creating Nodes for all points until target is reached
 while ~isequal(CurrentNode,target_node)
     
@@ -99,29 +101,34 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
+         
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+            if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode) ;
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
+         
         end
     end
     
@@ -130,30 +137,34 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
+  
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+            if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
         end
     end
     
@@ -162,30 +173,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+            if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            
         end
     end
     
@@ -194,30 +208,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+           if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
-            end
-            %                 end
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
+           end
         end
     end
     %% For left
@@ -225,30 +242,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+            if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
         end
     end
     
@@ -257,30 +277,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
-            
+
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+           if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
         end
     end
     %% For down
@@ -288,30 +311,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+           if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_linear + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
         end
     end
     
@@ -320,30 +346,33 @@ while ~isequal(CurrentNode,target_node)
     if (status == 1)
         [inside_obstacle,onobstacle_boundary] = obstacle_check(NewNode);
         if ~(inside_obstacle || onobstacle_boundary)
-            %                 if ~(any(all(bsxfun(@eq,NodesSet,NewNode))))
             
             id_test = getid(NewNode);
-            if(~any(id_test == NodesInfoSet(1,4,:)))
+            if(~any(id_test == NodesInfoSet(1,5,:)))
                 N=N+1;
                 NodesSet(:,:,N)=NewNode;
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
+                costtocome = cost_diagonal+ NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode) ;
                 id = getid(NewNode);
-                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,id];
+                NodesInfoSet(:,:,N) = [N,ParentNodeNumber,costtocome,tcost,id];
             else
-                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber)+ norm(target_node - NewNode);
-                id_index = find(id_test == NodesInfoSet(1,4,:));
+                costtocome = cost_diagonal + NodesInfoSet(1,3,ParentNodeNumber);
+                tcost = costtocome + norm(target_node - NewNode);
+                id_index = find(id_test == NodesInfoSet(1,5,:));
                 pt =NodesInfoSet(1,2,id_index);
-                ct =NodesInfoSet(1,3,id_index);
-                if (ct < costtocome)
+                tt =NodesInfoSet(1,4,id_index);
+                ct = NodesInfoSet(1,3,id_index);
+                if (tt < tcost)
                     parent_temp = pt;
+                    min_t_cost = tt;
                     min_cost = ct;
                 else
                     parent_temp = ParentNodeNumber;
+                    min_t_cost =tcost ;
                     min_cost = costtocome;
                 end
-                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,id_test] ;
+                NodesInfoSet(:,:,id_index) = [id_index,parent_temp,min_cost,min_t_cost,id_test] ;
             end
-            %                 end
         end
     end
     
